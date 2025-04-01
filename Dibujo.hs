@@ -27,14 +27,15 @@ r270 d = Rotar (r180 d)
 
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio.
 (.-.) :: Dibujo a -> Dibujo a -> Dibujo a
-
+dtop .-. dbottom = Apilar 1 1 dtop dbottom
 
 -- Pone una figura al lado de la otra, ambas ocupan el mismo espacio.
 (///) :: Dibujo a -> Dibujo a -> Dibujo a
-
+da /// db = Juntar 1 1 da db
 
 -- Superpone una figura con otra.
 (^^^) :: Dibujo a -> Dibujo a -> Dibujo a
+da ^^^ db = Encimar da db
 
 
 -- Dadas cuatro dibujos las ubica en los cuatro cuadrantes.
