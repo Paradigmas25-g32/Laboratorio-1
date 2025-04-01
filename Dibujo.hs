@@ -13,6 +13,8 @@ data Dibujo a = Basica a
 
 -- Composición n-veces de una función con sí misma.
 comp :: (a -> a) -> Int -> a -> a
+comp f 0 x = x
+comp f n x = f (comp f (n - 1) x)
 
 
 -- Rotaciones de múltiplos de 90.
