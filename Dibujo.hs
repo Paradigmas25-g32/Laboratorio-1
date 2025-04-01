@@ -19,9 +19,10 @@ comp f n x = f (comp f (n - 1) x)
 
 -- Rotaciones de múltiplos de 90.
 r180 :: Dibujo a -> Dibujo a
+r180 d = Rotar (Rotar d)
 
 r270 :: Dibujo a -> Dibujo a
-
+r270 d = Rotar (r180 d)
 
 
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio.
