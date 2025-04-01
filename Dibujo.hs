@@ -40,15 +40,16 @@ da ^^^ db = Encimar da db
 
 -- Dadas cuatro dibujos las ubica en los cuatro cuadrantes.
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
+cuarteto da db dc dd = Apilar 1 1 (Juntar 1 1 da db) (Juntar 1 1 dc dd)
 
 -- Una dibujo repetido con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a
-
+encimar4 d = d ^^^ r180 d ^^^ r270 d ^^^ Rotar d
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!
 ciclar :: Dibujo a -> Dibujo a
-
+ciclar d = cuarteto d (Rotar d) (r180 d) (r270 d)
 
 -- Transfomar un valor de tipo a como una Basica.
 pureDib :: a -> Dibujo a
