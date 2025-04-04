@@ -1,4 +1,17 @@
-module Dibujo where
+module Dibujo 
+( Dibujo
+, comp, r180
+, r270 , (.-.)
+, (///) , (^^^)
+, cuarteto , encimar4
+, ciclar , pureDib
+, foldDib, mapDib
+, desc , basicas
+, basica , rotar
+, rotar45 , espejar
+, apilar , juntar
+, encimar
+)where
 
 -- Definir el lenguaje via constructores de tipo
 -- Definir el lenguaje via constructores de tipo
@@ -10,6 +23,29 @@ data Dibujo a = Basica a
               | Juntar Float Float (Dibujo a) (Dibujo a)
               | Encimar (Dibujo a) (Dibujo a)
               deriving (Show, Eq, Ord)
+
+--constructores
+
+basica :: a -> Dibujo a
+basica = Basica
+
+rotar :: Dibujo a -> Dibujo a
+rotar = Rotar
+
+rotar45 :: Dibujo a -> Dibujo a
+rotar45 = Rotar45
+
+espejar :: Dibujo a -> Dibujo a
+espejar = Espejar
+
+apilar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a
+apilar = Apilar
+
+juntar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a
+juntar = Juntar
+
+encimar :: Dibujo a -> Dibujo a -> Dibujo a
+encimar = Encimar
 
 
 -- Composición n-veces de una función con sí misma.
@@ -65,7 +101,7 @@ foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
        Dibujo a -> b
 foldDib f _ _ _ _ _ _ (Basica a) = f a
 foldDib f g h i j k l (Rotar d) = g (foldDib f g h i j k l d)
-foldDib f g h i j k l (Espejo d) = h (foldDib f g h i j k l d)
+foldDib f g h i j k l (Espejar d) = h (foldDib f g h i j k l d)
 foldDib f g h i j k l (Rotar45 d) = i (foldDib f g h i j k l d)
 foldDib f g h i j k l (Apilar x y d1 d2) = j x y (foldDib f g h i j k l d1) (foldDib f g h i j k l d2)
 foldDib f g h i j k l (Juntar x y d1 d2) = k x y (foldDib f g h i j k l d1) (foldDib f g h i j k l d2)
@@ -77,7 +113,7 @@ mapDib :: (a -> b) -> Dibujo a -> Dibujo b
 mapDib f = foldDib 
     (Basica . f) 
     Rotar 
-    Espejo 
+    Espejar 
     Rotar45 
     Apilar 
     Juntar 
@@ -92,7 +128,7 @@ mapDib f = foldDib
 desc :: (a -> String) -> Dibujo a -> String
 desc f (Basica x) = f x
 desc f (Rotar d) = "rot (" ++ desc f d ++ ")"
-desc f (Espejo d) = "esp (" ++ desc f d ++ ")"
+desc f (Espejar d) = "esp (" ++ desc f d ++ ")"
 desc f (Rotar45 d) = "r45 (" ++ desc f d ++ ")"
 desc f (Apilar x y d1 d2) = "api " ++ show x ++ " " ++ show y ++ " (" ++ desc f d1 ++ ") " ++ " (" ++ desc f d2 ++ ")"
 desc f (Juntar x y d1 d2) = "api " ++ show x ++ " " ++ show y ++ " (" ++ desc f d1 ++ ") " ++ " (" ++ desc f d2 ++ ")"
@@ -105,7 +141,7 @@ basicas :: Dibujo a -> [a]
 basicas = foldDib
        (\x ->[x]) -- Basica
        id -- Rotar
-       id -- Espejo
+       id -- Espejar
        id -- Rotar45
        (\_ _ d1 d2 -> d1 ++ d2) -- Apilar
        (\_ _ d1 d2 -> d1 ++ d2) -- Juntar

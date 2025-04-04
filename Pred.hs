@@ -1,4 +1,4 @@
-module Dibujo where
+module Pred where
 
 import Dibujo
 
@@ -13,30 +13,65 @@ type Pred a = a -> Bool
 -- Por ejemplo, `cambiar (== Triangulo) (\x -> Rotar (Basica x))` rota
 -- todos los triángulos.
 cambiar :: Pred a -> a -> Dibujo a -> Dibujo a
+cambiar p f dib= foldDib (\a -> if p a then f a else basica a)
+                         rotar espejar rotar45 apilar juntar encimar dib
 
 -- Alguna básica satisface el predicado.
 anyDib :: Pred a -> Dibujo a -> Bool
+anyDib pred dib = foldDib pred id id id                 --rotar espejar rot45 
+                       (\_ _ d1 d2 -> d1 || d2)         --apilar
+                       (\_ _ d1 d2 -> d1 || d2)         --juntar
+                       (\d1 d2 -> d1 || d2) dib         --encimar
 
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool
-
+allDib pred dib = foldDib pred id id id
+                       (\_ _ d1 d2 -> d1 && d2)
+                       (\_ _ d1 d2 -> d1 && d2)
+                       (\d1 d2 -> d1 && d2) dib
 
 -- Hay 4 rotaciones seguidas.
 esRot360 :: Pred (Dibujo a)
+esRot360 dib = (foldDib (\x -> 0)                           --basica
+                        (\x -> 1 + x ) id id                --rotar espejar rot45 
+                        (\_ _ d1 d2 -> d1 + d2)             --apilar
+                        (\_ _ d1 d2 -> d1 + d2)             --juntar
+                        (\d1 d2 -> d1 + d2) dib) == 4       --encimar
 
 -- Hay 2 espejados seguidos.
 esFlip2 :: Pred (Dibujo a)
+esFlip2 dib = (foldDib (\x -> 0) id  
+                       (\x -> 1 + x) id 
+                       (\_ _ d1 d2 -> d1 + d2) 
+                       (\_ _ d1 d2 -> d1 + d2) 
+                       (\d1 d2 -> d1 + d2) dib) == 2
 
 data Superfluo = RotacionSuperflua | FlipSuperfluo
 
 ---- Chequea si el dibujo tiene una rotacion superflua
 errorRotacion :: Dibujo a -> [Superfluo]
+errorRotacion dib = foldDib (\x -> [])                                                  --basica
+                            (\x -> if esRot360 dib then RotacionSuperflua : x else x)   --rotar
+                            id id                                                       -- espejar rot45
+                            (\_ _ d1 d2 -> d1 ++ d2)                                    -- apilar
+                            (\_ _ d1 d2 -> d1 ++ d2)                                    --juntar
+                            (\d1 d2 -> d1 ++ d2) dib                                    --encimar
 
 -- Chequea si el dibujo tiene un flip superfluo
 errorFlip :: Dibujo a -> [Superfluo]
+errorFlip dib = foldDib (\_ -> []) id
+                        (\x -> if esFlip2 dib then FlipSuperfluo : x else x) id
+                        (\_ _ d1 d2 -> d1 ++ d2)
+                        (\_ _ d1 d2 -> d1 ++ d2)
+                        (\d1 d2 -> d1 ++ d2) dib
 
 -- Aplica todos los chequeos y acumula todos los errores, y
 -- sólo devuelve la figura si no hubo ningún error.
 checkSuperfluo :: Dibujo a -> Either [Superfluo] (Dibujo a)
-
+checkSuperfluo dib = let errRot = errorRotacion dib                 --chequeo si hay RotacionSuperflua
+                         errFlip = errorFlip dib                    --chequeo si hay FlipSuperfluo
+                         listErrors = errRot ++ errFlip             --concateno las listas
+                     in if listErrors == []
+                          then Right dib
+                          else Left listErrors 
 
