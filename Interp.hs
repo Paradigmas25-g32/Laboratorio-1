@@ -32,6 +32,7 @@ interp_rotar f = \v1 v2 v3 -> f (v1 V.+ v2) v3 (V.negate v2)
 
 --interpreta el operador de espejar
 interp_espejar :: ImagenFlotante -> ImagenFlotante
+interp_espejar f = \v1 v2 v3 -> f (v1 V.+ v2) (V.negate v2) v3
 
 --interpreta el operador de rotacion 45
 interp_rotar45 :: ImagenFlotante -> ImagenFlotante
