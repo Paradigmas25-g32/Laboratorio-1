@@ -52,6 +52,20 @@ interp_apilar n m f g = \v1 v2 v3 ->
 
 --interpreta el operador de juntar
 interp_juntar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_juntar n m f g = \v1 v2 v3 ->
+    let
+        t = n + m                          -- Total del peso
+        r = fromIntegral n / fromIntegral t  -- Proporción para f
+        r' = fromIntegral m / fromIntegral t -- Proporción para g
+        v2f = r V.* v2                     -- Parte del vector horizontal para f
+        v2g = r' V.* v2                    -- Parte del vector horizontal para g
+        gOffset = v1 V.+ v2f               -- Punto donde empieza g
+        f' = f v1 v2f v3                   -- f se dibuja desde el origen, pero en menos espacio
+        g' = g gOffset v2g v3              -- g se dibuja desde donde termina f
+    in
+        Pictures [f', g']
+
+
 
 --interpreta el operador de encimar
 interp_encimar :: ImagenFlotante -> ImagenFlotante -> ImagenFlotante
