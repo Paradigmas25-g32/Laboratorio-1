@@ -56,7 +56,7 @@ interp_juntar n m f g = \v1 v2 v3 ->
     let
         t = n + m
         r = fromIntegral n / fromIntegral t
-        r' = fromIntegral m / fromIntegral t -
+        r' = fromIntegral m / fromIntegral t 
         v2f = r V.* v2
         v2g = r' V.* v2
         gOffset = v1 V.+ v2f
