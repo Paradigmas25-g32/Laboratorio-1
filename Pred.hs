@@ -101,10 +101,16 @@ esFlip2 dib = (foldDib (\x -> 0)                                    --basica
                                             else 0)
                          dib) == 2
 
-data Superfluo = RotacionSuperflua | FlipSuperfluo
+data Superfluo = RotacionSuperflua | FlipSuperfluo deriving (Eq , Show)
 
 ---- Chequea si el dibujo tiene una rotacion superflua
 errorRotacion :: Dibujo a -> [Superfluo]
+errorRotacion dib = foldDib (\x -> [])
+                            (\x -> if esRot360 dib then [RotacionSuperflua] else [])
+                            id id
+                            (\_ _ d1 d2 -> d1 ++ d2)
+                            (\_ _ d1 d2 -> d1 ++ d2)
+                            (\d1 d2 -> d1 ++ d2) dib 
 
 -- Chequea si el dibujo tiene un flip superfluo
 errorFlip :: Dibujo a -> [Superfluo]
