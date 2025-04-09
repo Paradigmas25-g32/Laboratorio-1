@@ -66,9 +66,40 @@ esRot360 dib = (foldDib (\x -> 0)                                   --basica
                                         else 0) 
                         dib) == 4       
 
-                        
+
 -- Hay 2 espejados seguidos.
 esFlip2 :: Pred (Dibujo a)
+esFlip2 dib = (foldDib (\x -> 0)                                    --basica
+                                                                    --rotar
+                       (\x -> if x `div` 2 >= 1                     --hubo 2 espejar?
+                                then x                              -- hay 2 espejar
+                                else 0)                             -- cuento de nuevo
+
+                                                                    --espejar
+                       (\x -> if x `div` 2 >= 1               --chequeo que hubo 2 espejar
+                                    then x                          -- si hay
+                                    else 1 + x  )                   -- sigo contando
+                        
+                       (\x -> if x `div` 2 >= 1                     --rot45, similar a rotar
+                                then x 
+                                else 0) 
+                        
+                       (\_ _ d1 d2 -> if d1 `div` 2 >= 1            --apilar
+                                        then 2 
+                                        else if d2 `div` 2 >= 1
+                                            then 2
+                                            else 0) 
+                       (\_ _ d1 d2 -> if d1 `div` 2 >= 1            --juntar
+                                        then 2 
+                                        else if d2 `div` 2 >= 1 
+                                            then 2
+                                            else 0) 
+                       (\d1 d2 -> if d1 `div` 2 >= 1                --encimar
+                                        then 2 
+                                        else if d2 `div` 2 >= 1 
+                                            then 2
+                                            else 0)
+                         dib) == 2
 
 data Superfluo = RotacionSuperflua | FlipSuperfluo
 
