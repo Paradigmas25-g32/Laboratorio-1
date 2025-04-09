@@ -1,7 +1,7 @@
 module Main where
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Display
-import Graphics.UI.GLUT.Begin
+--import Graphics.UI.GLUT.Begin
 import Dibujo
 import Interp
 import qualified Basica.Ejemplo as E

@@ -34,29 +34,27 @@ interp_espejar f = \v1 v2 v3 -> f (v1 V.+ v2) (V.negate v2) v3
 
 --interpreta el operador de rotacion 45
 interp_rotar45 :: ImagenFlotante -> ImagenFlotante
-interp_rotar45 f = \v1 v2 v3 -> f (v1 V.+ (mitad(v2 V.+ v3))) mitad(v2 V.+ v3) mitad(v3 V.- v2)
-
+interp_rotar45 f v1 v2 v3 = f (v1 V.+ mitad (v2 V.+ v3)) (mitad (v2 V.+ v3)) (mitad (v3 V.- v2))
 
 --interpreta el operador de apilar
-interp_apilar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_apilar :: Float -> Float -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
 interp_apilar n m f g = \v1 v2 v3 ->
     let
         t = n + m
-        r = m `div` t 
-        r' = n `div`t
-        h' = r'*v3
-        f' = f (v1 V.+ h') v2 (v3 V.* r)
+        r = m / t 
+        r' = n / t
+        h' = r' V.* v3
+        f' = f (v1 V.+ h') v2 (r V.* v3)
         g' = g v1 v2 h'
     in
-        f' V.+ g'
+        Pictures [f', g']--interpreta el operador de juntar
 
---interpreta el operador de juntar
-interp_juntar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_juntar :: Float -> Float -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
 interp_juntar n m f g = \v1 v2 v3 ->
     let
         t = n + m
-        r = fromIntegral n / fromIntegral t
-        r' = fromIntegral m / fromIntegral t 
+        r = n / t
+        r' = m / t 
         v2f = r V.* v2
         v2g = r' V.* v2
         gOffset = v1 V.+ v2f
@@ -67,17 +65,9 @@ interp_juntar n m f g = \v1 v2 v3 ->
 
 --interpreta el operador de encimar
 interp_encimar :: ImagenFlotante -> ImagenFlotante -> ImagenFlotante
-inter_encimar f g = \v1 v2 v3 -> f(v1 v2 v3) . g(v1 v2 v3)
+interp_encimar f g = \v1 v2 v3 -> Pictures [f v1 v2 v3, g v1 v2 v3]
 
 
---interpreta cualquier expresion del tipo Dibujo a
---utilizar foldDib 
-interp :: Interpretacion a -> Dibujo a -> ImagenFlotante
-interp f = foldDib
-    (\x -> \v1 v2 v3 -> f x v1 v2 v3)
-    (\x -> interp_rotar (interp x))
-    (\x -> interp_espejar (interp x))
-    (\x -> interp_rotar45 (interp x))
-    (\n m x y -> interp_apilar n m (interp x) (interp y))
-    (\n m x y -> interp_juntar n m (interp x) (interp y))
-    (\x y -> interp_encimar (interp x) (interp y))
+interp:: Interpretacion a -> Dibujo a -> ImagenFlotante
+interp f = foldDib f interp_rotar interp_espejar interp_rotar45 interp_apilar interp_juntar interp_encimar
+
