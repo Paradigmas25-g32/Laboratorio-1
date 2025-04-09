@@ -121,9 +121,14 @@ errorFlip dib = foldDib (\_ -> [])
                         (\_ _ d1 d2 -> d1 ++ d2)
                         (\_ _ d1 d2 -> d1 ++ d2)
                         (\d1 d2 -> d1 ++ d2) dib
-                        
+
 -- Aplica todos los chequeos y acumula todos los errores, y
 -- sólo devuelve la figura si no hubo ningún error.
 checkSuperfluo :: Dibujo a -> Either [Superfluo] (Dibujo a)
-
+checkSuperfluo dib = let errRot = errorRotacion dib                 --chequeo si hay RotacionSuperflua
+                         errFlip = errorFlip dib                    --chequeo si hay FlipSuperfluo
+                         listErrors = errRot ++ errFlip             --concateno las listas
+                     in if listErrors == []
+                          then Right dib
+                          else Left listErrors 
 
