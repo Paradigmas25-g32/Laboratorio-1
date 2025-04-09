@@ -17,6 +17,7 @@ mitad = (0.5 V.*)
 
 --interpreta el operador de rotacion
 interp_rotar :: ImagenFlotante -> ImagenFlotante
+interp_rotar f = \v1 v2 v3 -> f (v1 V.+ v2) v3 (V.negate v2)
 
 --interpreta el operador de espejar
 interp_espejar :: ImagenFlotante -> ImagenFlotante
