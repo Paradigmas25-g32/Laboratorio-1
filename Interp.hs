@@ -25,7 +25,18 @@ interp_espejar :: ImagenFlotante -> ImagenFlotante
 interp_rotar45 :: ImagenFlotante -> ImagenFlotante
 
 --interpreta el operador de apilar
-interp_apilar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_apilar :: Float -> Float -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_apilar n m f g = \v1 v2 v3 ->
+    let
+        t = n + m
+        r = m / t 
+        r' = n / t
+        h' = r' V.* v3
+        f' = f (v1 V.+ h') v2 (r V.* v3)
+        g' = g v1 v2 h'
+    in
+        Pictures [f', g']--interpreta el operador de juntar
+
 
 --interpreta el operador de juntar
 interp_juntar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
