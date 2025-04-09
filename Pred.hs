@@ -32,6 +32,39 @@ allDib pred dib = foldDib pred id id id
 
 -- Hay 4 rotaciones seguidas.
 esRot360 :: Pred (Dibujo a)
+esRot360 dib = (foldDib (\x -> 0)                                   --basica
+                        (\x -> if x `div` 4 >= 1              --chequeo si hubo 4 rot
+                                    then x                          --hay 4 rot
+                                    else 1 + x )                    --no hay 4 rot -> sigo contando
+
+                                                                    --espejar
+                        (\x -> if x `div` 4 >= 1                    --hubo 4 rotar?
+                                then x                              --hay 4 rotar
+                                else 0)                             --cuento de nuevo
+                                                                    
+                                                                    --rot45
+                        (\x -> if x `div` 4 >= 1                    --hubo 4 rotar?
+                                then x                              --hay 4 rotar
+                                else 0)                             --cuento de nuevo                                      
+                                                                    --apilar
+                        (\_ _ d1 d2 -> if d1 `div` 4 >= 1          --chequeo si dib1 tiene 4 rot
+                                        then 4 
+                                        else if d2 `div` 4 >= 1     --chequeo si dib2 tiene 4 rot
+                                            then 4
+                                            else 0)                     
+                                                                    --juntar
+                        (\_ _ d1 d2 -> if d1 `div` 4 >= 1           --chequeo si dib1 tiene 4 rot
+                                        then 4 
+                                        else if d2 `div` 4 >= 1     --chequeo si dib2 tiene 4 rot
+                                            then 4
+                                            else 0)                     
+                                                                    --encimar
+                        (\d1 d2 -> if d1 `div` 4 >= 1               --chequeo si dib1 tiene 4 rot
+                                    then 4                          
+                                    else if d2 `div` 4 >= 1         --chequeo si dib2 tiene 4 rot
+                                        then 4
+                                        else 0) 
+                        dib) == 4       
 
 -- Hay 2 espejados seguidos.
 esFlip2 :: Pred (Dibujo a)
