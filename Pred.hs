@@ -114,7 +114,14 @@ errorRotacion dib = foldDib (\x -> [])
 
 -- Chequea si el dibujo tiene un flip superfluo
 errorFlip :: Dibujo a -> [Superfluo]
-
+errorFlip dib = foldDib (\_ -> [])
+                        id
+                        (\x -> if esFlip2 dib then [FlipSuperfluo] else []) 
+                        id
+                        (\_ _ d1 d2 -> d1 ++ d2)
+                        (\_ _ d1 d2 -> d1 ++ d2)
+                        (\d1 d2 -> d1 ++ d2) dib
+                        
 -- Aplica todos los chequeos y acumula todos los errores, y
 -- sólo devuelve la figura si no hubo ningún error.
 checkSuperfluo :: Dibujo a -> Either [Superfluo] (Dibujo a)
