@@ -66,6 +66,7 @@ esRot360 dib = (foldDib (\x -> 0)                                   --basica
                                         else 0) 
                         dib) == 4       
 
+                        
 -- Hay 2 espejados seguidos.
 esFlip2 :: Pred (Dibujo a)
 
