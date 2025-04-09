@@ -6,6 +6,8 @@ module Interp
      interp_apilar,
      interp_juntar,
      interp_encimar,
+     ImagenFlotante,
+     mitad,
      )
 where
 

@@ -1,12 +1,12 @@
-module Basica.Ejemplo where
+module Basics.Ejemplo where
 import Dibujo
 import Interp
-import Basica.Comun
+import Basics.Comun
 
 type Basica = ()
 
 ejemplo :: Dibujo Basica
-ejemplo = Espejar(Figura ())
+ejemplo = espejar(basica ())
 
 interpBas :: Basica -> ImagenFlotante
 interpBas () = formaF

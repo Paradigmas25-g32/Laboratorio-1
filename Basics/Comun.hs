@@ -1,4 +1,4 @@
-module Basica.Comun where
+module Basics.Comun where
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
