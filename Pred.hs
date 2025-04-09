@@ -25,7 +25,10 @@ anyDib pred dib = foldDib pred id id id                 --rotar espejar rot45
                        
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool
-
+allDib pred dib = foldDib pred id id id
+                       (\_ _ d1 d2 -> d1 && d2)
+                       (\_ _ d1 d2 -> d1 && d2)
+                       (\d1 d2 -> d1 && d2) dib
 
 -- Hay 4 rotaciones seguidas.
 esRot360 :: Pred (Dibujo a)
