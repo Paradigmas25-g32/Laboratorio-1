@@ -18,7 +18,11 @@ cambiar p f dib= foldDib (\a -> if p a then f a else basica a)
 
 -- Alguna básica satisface el predicado.
 anyDib :: Pred a -> Dibujo a -> Bool
-
+anyDib pred dib = foldDib pred id id id                 --rotar espejar rot45 
+                       (\_ _ d1 d2 -> d1 || d2)         --apilar
+                       (\_ _ d1 d2 -> d1 || d2)         --juntar
+                       (\d1 d2 -> d1 || d2) dib         --encimar
+                       
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool
 
