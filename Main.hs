@@ -4,7 +4,7 @@ import Graphics.Gloss.Interface.IO.Display
 import Graphics.UI.GLUT.Begin
 import Dibujo
 import Interp
-import qualified Basica.Ejemplo as E
+import qualified Basica.Escher as E
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 --Funciones para rellenar el fondo de la imagen inicial
@@ -25,7 +25,7 @@ grilla n origen sep l = pictures [ls, lsV]
 -- Configuración para interpretar un dibujo
 data Conf a = Conf {
     basic :: a -> ImagenFlotante
-  , fig  :: Dibujo a
+  , fig  :: Int -> a -> Dibujo a
   , width :: Float
   , height :: Float
   , r :: Picture -> Picture  -- Reposicionar figura
@@ -33,7 +33,7 @@ data Conf a = Conf {
 
 ej ancho alto = Conf {
                 basic = E.interpBas
-              , fig = E.ejemplo
+              , fig = E.escher
               , width = ancho
               , height = alto
               , r = id
@@ -44,7 +44,7 @@ moverCentro ancho alto p = translate (-ancho / 2) (-alto / 2) p
 
 ejCentro ancho alto = Conf {
                 basic = E.interpBas
-              , fig = E.ejemplo
+              , fig = E.escher
               , width = ancho
               , height = alto
               , r = moverCentro ancho alto
@@ -54,11 +54,11 @@ ejCentro ancho alto = Conf {
 -- pantalla la figura de la misma de acuerdo a la interpretación para
 -- las figuras básicas. Permitimos una computación para poder leer
 -- archivos, tomar argumentos, etc.
-inicial :: IO (Conf E.Basica) -> IO ()
+inicial :: IO (Conf E.Escher) -> IO ()
 inicial cf = cf >>= \cfg ->
     let ancho  = (width cfg, 0)
         alto  = (0, height cfg)
-        imagen = interp (basic cfg) (fig cfg) (0, 0) ancho alto
+        imagen = interp (basic cfg) (fig cfg 4 E.Fish) (0, 0) ancho alto
     in display win white . withGrid $ imagen
   where grillaGris = color grey $ grilla 10 (0, 0) 100 10
         withGrid p = pictures [p, grillaGris]

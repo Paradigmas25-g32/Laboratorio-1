@@ -29,7 +29,7 @@ interp_rotar45 f v1 v2 v3 = f (v1 V.+ mitad (v2 V.+ v3)) (mitad (v2 V.+ v3)) (mi
 
 --interpreta el operador de apilar
 interp_apilar :: Float -> Float -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
-interp_apilar n m f g = \v1 v2 v3 ->
+interp_apilar m n f g = \v1 v2 v3 ->
     let
         t = n + m
         r = m / t 
@@ -43,18 +43,18 @@ interp_apilar n m f g = \v1 v2 v3 ->
 
 --interpreta el operador de juntar
 interp_juntar :: Float -> Float -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
-interp_juntar n m f g = \v1 v2 v3 ->
+interp_juntar m n f g = \v1 v2 v3 ->
     let
         t = n + m
-        r = n / t
-        r' = m / t 
-        v2f = r V.* v2
-        v2g = r' V.* v2
-        gOffset = v1 V.+ v2f
+        r' = n / t              -- r' = n/(n+m)
+        r = m / t               -- r = m/(n+m)
+        v2f = r V.* v2          -- w' = r*w
+        v2g = r' V.* v2         -- w'' = r'*w
+
         f' = f v1 v2f v3
-        g' = g gOffset v2g v3
+        g' = g (v1 V.+ v2f) v2g v3
     in
-        Pictures [f', g']
+        Pictures [f',g']
 
 --interpreta el operador de encimar
 interp_encimar :: ImagenFlotante -> ImagenFlotante -> ImagenFlotante
