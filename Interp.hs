@@ -42,6 +42,18 @@ interp_apilar n m f g = \v1 v2 v3 ->
 
 --interpreta el operador de juntar
 interp_juntar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_juntar n m f g = \v1 v2 v3 ->
+    let
+        t = n + m
+        r = n / t
+        r' = m / t 
+        v2f = r V.* v2
+        v2g = r' V.* v2
+        gOffset = v1 V.+ v2f
+        f' = f v1 v2f v3
+        g' = g gOffset v2g v3
+    in
+        Pictures [f', g']
 
 --interpreta el operador de encimar
 interp_encimar :: ImagenFlotante -> ImagenFlotante -> ImagenFlotante
