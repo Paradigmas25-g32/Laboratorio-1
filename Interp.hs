@@ -9,8 +9,6 @@ module Interp
      )
 where
 
--- Sacar del esqueleto final!
-module Interp where
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
@@ -64,8 +62,6 @@ interp_juntar n m f g = \v1 v2 v3 ->
         g' = g gOffset v2g v3
     in
         Pictures [f', g']
-
-
 
 --interpreta el operador de encimar
 interp_encimar :: ImagenFlotante -> ImagenFlotante -> ImagenFlotante
