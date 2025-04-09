@@ -42,7 +42,7 @@ interp_apilar n m f g = \v1 v2 v3 ->
 
 
 --interpreta el operador de juntar
-interp_juntar :: Int -> Int -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
+interp_juntar :: Float -> Float -> ImagenFlotante -> ImagenFlotante -> ImagenFlotante
 interp_juntar n m f g = \v1 v2 v3 ->
     let
         t = n + m
