@@ -36,4 +36,5 @@ interp_encimar :: ImagenFlotante -> ImagenFlotante -> ImagenFlotante
 --interpreta cualquier expresion del tipo Dibujo a
 --utilizar foldDib 
 interp :: Interpretacion a -> Dibujo a -> ImagenFlotante
+interp f = foldDib f interp_rotar interp_espejar interp_rotar45 interp_apilar interp_juntar interp_encimar
 
